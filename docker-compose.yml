@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  muraasla_landing:
+    build: .
+    ports:
+      - "7600:80"
+    restart: unless-stopped
