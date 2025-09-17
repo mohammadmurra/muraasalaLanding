@@ -1,14 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-/**
- * Shared site header displayed on every page. This component renders the
- * navigation bar, language selector, dark/light mode toggle and logo. It
- * accepts strings for navigation labels, a toggle function for language
- * and dark mode, as well as directionality for RTL languages.
- */
 export interface HeaderProps {
-  /** Navigation labels for the current language. */
   nav: {
     features: string;
     contact: string;
@@ -16,114 +9,217 @@ export interface HeaderProps {
     terms: string;
     language: string;
   };
-  /** Site brand name to display in the logo area. */
   brand: string;
-  /** Current language, used only to set the document direction on toggles. */
-  lang: 'en' | 'ar';
-  /** Whether dark mode is currently enabled. */
+  lang: "en" | "ar";
   darkMode: boolean;
-  /** Handler to toggle dark mode. */
   onToggleDarkMode: () => void;
-  /** Handler to toggle the site language. */
   onToggleLang: () => void;
-  /** Directionality for the page (ltr or rtl). */
-  dir: 'ltr' | 'rtl';
+  dir: "ltr" | "rtl";
 }
 
-/**
- * Header component. Renders a sticky navigation bar with logo, navigation
- * links and controls for language and theme switching. Links to internal
- * pages use React Router's Link component to avoid full page reloads.
- */
-const Header: React.FC<HeaderProps> = ({ brand, nav, lang, darkMode, onToggleDarkMode, onToggleLang, dir }) => {
-  // Track whether the mobile navigation menu is open
+const Header: React.FC<HeaderProps> = ({
+  brand,
+  nav,
+  darkMode,
+  onToggleDarkMode,
+  onToggleLang,
+  dir,
+}) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Close the menu when navigating to a link
-  const handleNavClick = () => {
-    setMenuOpen(false);
-  };
+  useEffect(() => {
+    setIsLoaded(true);
+    const handleScroll = () => setScrolled(window.scrollY > 8);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleNavClick = () => setMenuOpen(false);
 
   return (
     <>
-      <nav className="sticky top-0 z-30 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Logo and brand */}
-        <Link to="/" className="flex items-center space-x-2 rtl:space-x-reverse">
-          <img src="/icon.png" alt="Muraasala Icon" className="h-8 w-8" />
-          <span className="text-2xl font-bold text-primary-500 dark:text-primary-300">{brand}</span>
-        </Link>
-        {/* Navigation links for medium and larger screens */}
-        <div className="hidden md:flex items-center space-x-6 rtl:space-x-reverse">
-          {/* In-page anchors for home page sections. Using plain <a> to keep anchors working outside router context. */}
-          <a href="/#features" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{nav.features}</a>
-          <a href="/#contact" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{nav.contact}</a>
-          {/* Link to privacy and terms pages */}
-          <Link to="/privacy" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{nav.privacy}</Link>
-          <Link to="/terms" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{nav.terms}</Link>
+      <nav
+        className={`sticky top-0 z-30 transition-all duration-300 ${
+          scrolled
+            ? "glass-strong border-b border-gray-200/20 dark:border-gray-700/20 shadow-lg"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          {/* Brand */}
+          <Link 
+            to="/" 
+            className={`flex items-center gap-3 rtl:flex-row-reverse group transition-all duration-300 ${
+              isLoaded ? 'animate-fadeIn' : 'opacity-0'
+            }`}
+          >
+            <div className="relative">
+              <img 
+                src="/icon.png" 
+                alt="Muraasala Icon" 
+                className="h-8 w-8" 
+              />
+            </div>
+            <span 
+              className="text-2xl font-bold"
+              style={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              {brand}
+            </span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-8">
+            <a 
+              href="/#features" 
+              className="nav-link relative group"
+            >
+              {nav.features}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <a 
+              href="/#contact" 
+              className="nav-link relative group"
+            >
+              {nav.contact}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <Link 
+              to="/privacy" 
+              className="nav-link relative group"
+            >
+              {nav.privacy}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link 
+              to="/terms" 
+              className="nav-link relative group"
+            >
+              {nav.terms}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+          </div>
+
+          {/* Controls */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onToggleDarkMode}
+              className="p-2.5 rounded-xl glass hover:scale-110 transition-all duration-200"
+              title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+              aria-label="Toggle theme"
+            >
+              <span className="text-lg transition-transform duration-300 hover:rotate-180">
+                {darkMode ? "☀️" : "🌙"}
+              </span>
+            </button>
+            <button
+              onClick={onToggleLang}
+              className="px-4 py-2 rounded-xl glass text-sm font-medium hover:scale-105 transition-all duration-200"
+            >
+              {nav.language}
+            </button>
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              className="md:hidden p-2.5 rounded-xl glass hover:scale-110 transition-all duration-200"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+            >
+              <span className="text-lg transition-transform duration-300">
+                {menuOpen ? "✕" : "☰"}
+              </span>
+            </button>
+          </div>
         </div>
-        {/* Controls: dark mode, language and mobile menu toggle */}
-        <div className="flex items-center space-x-2 rtl:space-x-reverse">
-          {/* Dark mode toggle */}
-          <button
-            onClick={onToggleDarkMode}
-            className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {darkMode ? '☀️' : '🌙'}
-          </button>
-          {/* Language toggle */}
-          <button
-            onClick={onToggleLang}
-            className="px-3 py-1 border border-primary-500 text-primary-500 dark:text-primary-300 rounded-md hover:bg-primary-50 dark:hover:bg-primary-900 transition-colors"
-          >
-            {nav.language}
-          </button>
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors md:hidden"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          >
-            {menuOpen ? '✕' : '☰'}
-          </button>
-        </div>
-      </div>
       </nav>
-      {/* Overlay behind the menu when it is open. Clicking on it closes the menu. */}
+
+      {/* Mobile Menu Overlay */}
       {menuOpen && (
         <div
           onClick={handleNavClick}
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
         />
       )}
-      {/* Slide-in side menu container. It slides from the side depending on RTL/LTR and features a high z-index and rounded corners */}
+
+      {/* Mobile Menu */}
       <div
-        className={`fixed inset-y-0 z-50 md:hidden w-64 max-w-[75%] bg-white dark:bg-gray-800 shadow-lg overflow-y-auto transform transition-transform duration-300 ${
-          dir === 'rtl'
-            ? 'right-0 rounded-l-xl border-l border-gray-200 dark:border-gray-700'
-            : 'left-0 rounded-r-xl border-r border-gray-200 dark:border-gray-700'
+        className={`fixed inset-y-0 z-50 md:hidden w-80 max-w-[85%] glass-strong transition-all duration-300 ${
+          dir === "rtl" ? "right-0 rounded-l-3xl" : "left-0 rounded-r-3xl"
         } ${
           menuOpen
-            ? 'translate-x-0'
-            : dir === 'rtl'
-            ? 'translate-x-full'
-            : '-translate-x-full'
+            ? "translate-x-0 opacity-100"
+            : dir === "rtl"
+            ? "translate-x-full opacity-0"
+            : "-translate-x-full opacity-0"
         }`}
       >
-        <div className="px-6 py-8 space-y-6">
-          <a href="/#features" onClick={handleNavClick} className="block text-lg font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-            {nav.features}
-          </a>
-          <a href="/#contact" onClick={handleNavClick} className="block text-lg font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-            {nav.contact}
-          </a>
-          <Link to="/privacy" onClick={handleNavClick} className="block text-lg font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-            {nav.privacy}
-          </Link>
-          <Link to="/terms" onClick={handleNavClick} className="block text-lg font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-            {nav.terms}
-          </Link>
+        <div className="px-8 py-12 space-y-8">
+          {/* Mobile Brand */}
+          <div className="flex items-center gap-3 mb-8">
+            <img src="/icon.png" alt="Muraasala Icon" className="h-8 w-8" />
+                <span 
+                  className="text-xl font-bold"
+                  style={{
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}
+                >
+                  {brand}
+                </span>
+          </div>
+          
+          {/* Mobile Navigation */}
+          <nav className="space-y-6">
+            <a
+              href="/#features"
+              onClick={handleNavClick}
+              className="block text-lg font-medium nav-link hover:translate-x-2 rtl:hover:-translate-x-2 transition-all duration-300"
+            >
+              {nav.features}
+            </a>
+            <a
+              href="/#contact"
+              onClick={handleNavClick}
+              className="block text-lg font-medium nav-link hover:translate-x-2 rtl:hover:-translate-x-2 transition-all duration-300"
+            >
+              {nav.contact}
+            </a>
+            <Link
+              to="/privacy"
+              onClick={handleNavClick}
+              className="block text-lg font-medium nav-link hover:translate-x-2 rtl:hover:-translate-x-2 transition-all duration-300"
+            >
+              {nav.privacy}
+            </Link>
+            <Link
+              to="/terms"
+              onClick={handleNavClick}
+              className="block text-lg font-medium nav-link hover:translate-x-2 rtl:hover:-translate-x-2 transition-all duration-300"
+            >
+              {nav.terms}
+            </Link>
+          </nav>
+          
+          {/* Mobile Controls */}
+          <div className="pt-8 border-t border-gray-200/20 dark:border-gray-700/20">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Theme</span>
+              <button
+                onClick={onToggleDarkMode}
+                className="p-2 rounded-xl glass hover:scale-110 transition-all duration-200"
+              >
+                <span className="text-lg">{darkMode ? "☀️" : "🌙"}</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </>

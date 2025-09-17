@@ -1,34 +1,34 @@
-import React from 'react';
+import React from "react";
 
 interface TermsContent {
-  title: string;
-  paragraphs: string[];
+  readonly title: string;
+  readonly paragraphs: readonly string[];
 }
-
 interface TermsPageProps {
-  lang: 'en' | 'ar';
+  lang: "en" | "ar";
   terms: TermsContent;
 }
 
-/**
- * Terms of service page. Shows the terms text in the selected language. The
- * page uses the same footer styling as other pages. Header is provided
- * externally by App.tsx.
- */
 const TermsPage: React.FC<TermsPageProps> = ({ terms }) => {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold mb-6 text-primary-600 dark:text-primary-400">
-        {terms.title}
-      </h1>
-      {terms.paragraphs.map((para, idx) => (
-        <p key={idx} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">
-          {para}
-        </p>
-      ))}
-      <footer className="mt-12 py-6 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700">
-        <p>© {new Date().getFullYear()} Muraasala. All rights reserved.</p>
-      </footer>
+    <div className="relative">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(600px_300px_at_20%_0%,rgba(99,102,241,0.18),transparent),radial-gradient(600px_300px_at_80%_0%,rgba(16,185,129,0.15),transparent)] -z-10" />
+      <div className="max-w-3xl mx-auto px-4 py-16">
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-primary-600 dark:text-primary-400">
+          {terms.title}
+        </h1>
+        {terms.paragraphs.map((para, idx) => (
+          <p
+            key={idx}
+            className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed"
+          >
+            {para}
+          </p>
+        ))}
+        <footer className="mt-12 pt-6 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-black/5 dark:border-white/10">
+          <p>© {new Date().getFullYear()} Muraasala. All rights reserved.</p>
+        </footer>
+      </div>
     </div>
   );
 };
