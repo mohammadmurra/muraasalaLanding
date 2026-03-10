@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy – Muraasala</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+          Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+        color: #333;
+        background-color: #fff;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      h1 {
+        color: #046c70;
+        margin-top: 1.5rem;
+      }
+      h2 {
+        color: #046c70;
+        margin-top: 2rem;
+      }
+      a {
+        color: #046c70;
+        text-decoration: none;
+      }
+      .rtl {
+        direction: rtl;
+        text-align: right;
+      }
+      .site-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        background-color: rgba(255,255,255,0.8);
+        backdrop-filter: blur(5px);
+        position: sticky;
+        top: 0;
+        z-index: 30;
+      }
+      .dark .site-header {
+        background-color: rgba(17,24,39,0.8);
+        border-bottom-color: #374151;
+      }
+      .nav-links a {
+        margin-right: 1rem;
+        color: #046c70;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .nav-links a:last-child {
+        margin-right: 0;
+      }
+      .dark .nav-links a {
+        color: #9ca3af;
+      }
+      .header-controls button {
+        margin-left: 0.5rem;
+        border: 1px solid #046c70;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+        background: none;
+        cursor: pointer;
+        color: #046c70;
+      }
+      .dark .header-controls button {
+        border-color: #9ca3af;
+        color: #9ca3af;
+      }
+      .site-footer {
+        border-top: 1px solid #e5e7eb;
+        padding: 1rem 0;
+        text-align: center;
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 3rem;
+      }
+      .dark .site-footer {
+        border-top-color: #374151;
+        color: #9ca3af;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-header">
+      <div class="site-logo" style="display:flex;align-items:center;">
+        <img src="/icon.png" alt="Muraasala Icon" style="height:2rem;width:2rem;margin-right:0.5rem;" />
+        <span style="font-size:1.5rem;font-weight:bold;color:#046c70;" class="dark-text">Muraasala</span>
+      </div>
+      <div class="nav-links" style="display:flex;align-items:center;">
+        <a href="/#features">Features</a>
+        <a href="/#contact">Contact</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms</a>
+      </div>
+      <div class="header-controls" style="display:flex;align-items:center;">
+        <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
+        <button id="lang-toggle" class="lang-toggle" title="Toggle language">العربية</button>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="lang-en">
+        <h1>Privacy Policy</h1>
+        <p>Muraasala respects your privacy and ensures the confidentiality of your personal data.</p>
+        <p>
+          We collect only essential information required to provide our messaging services. This may include your contact information, message content and usage metrics.
+        </p>
+        <p>
+          We do not sell or share your data with third parties, except as required by law or to maintain the service.
+        </p>
+        <p>You can contact us to manage or delete your data at any time.</p>
+      </div>
+      <div class="lang-ar" style="display:none;">
+        <h1 class="rtl">سياسة الخصوصية</h1>
+        <p class="rtl">تحترم مراسلة خصوصيتك وتضمن سرية بياناتك الشخصية.</p>
+        <p class="rtl">
+          نقوم بجمع المعلومات الأساسية فقط اللازمة لتوفير خدمات الرسائل لدينا، والتي قد تشمل معلومات الاتصال ومحتوى الرسائل ومقاييس الاستخدام.
+        </p>
+        <p class="rtl">
+          لا نبيع أو نشارك بياناتك مع أطراف ثالثة، إلا إذا تطلب القانون ذلك أو للحفاظ على الخدمة.
+        </p>
+        <p class="rtl">يمكنك الاتصال بنا لإدارة أو حذف بياناتك في أي وقت.</p>
+      </div>
+    </div>
+    <footer class="site-footer">
+      © 2025 Muraasala. All rights reserved.
+    </footer>
+    <script>
+      (function() {
+        let darkMode = false;
+        let lang = 'en';
+        const themeToggle = document.getElementById('theme-toggle');
+        const langToggle = document.getElementById('lang-toggle');
+        function updateDark() {
+          document.documentElement.classList.toggle('dark', darkMode);
+          themeToggle.textContent = darkMode ? '☀️' : '🌙';
+        }
+        function updateLang() {
+          document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+          document.documentElement.lang = lang;
+          langToggle.textContent = lang === 'ar' ? 'English' : 'العربية';
+          const enEls = document.querySelectorAll('.lang-en');
+          const arEls = document.querySelectorAll('.lang-ar');
+          enEls.forEach(el => el.style.display = lang === 'en' ? 'block' : 'none');
+          arEls.forEach(el => el.style.display = lang === 'ar' ? 'block' : 'none');
+        }
+        themeToggle.addEventListener('click', () => {
+          darkMode = !darkMode;
+          updateDark();
+        });
+        langToggle.addEventListener('click', () => {
+          lang = lang === 'en' ? 'ar' : 'en';
+          updateLang();
+        });
+        // initialize
+        updateDark();
+        updateLang();
+      })();
+    </script>
+  </body>
+</html>
